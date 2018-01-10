@@ -73,7 +73,6 @@ class LDAPDirectoryConnector(object):
         builder.set_bool_value('require_tls_cert', False)
         builder.set_bool_value('two_steps_group_member_lookup', False)
         builder.set_string_value('two_steps_group_member_attribute_name', 'member')
-        builder.set_string_value('user_identity_type_format', None)
         builder.set_string_value('string_encoding', 'utf8')
         builder.set_string_value('user_identity_type_format', None)
         builder.set_string_value('user_email_format', six.text_type('{mail}'))
