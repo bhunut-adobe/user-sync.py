@@ -81,21 +81,16 @@ group_filter_format: "(&(|(objectCategory=group)(objectClass=groupOfNames)(objec
 # group_member_filter_format: "(memberOf:1.2.840.113556.1.4.1941:={group_dn})"
 group_member_filter_format: "(memberOf={group_dn})"
 
-# (optional) two_steps_group_member_lookup (default value given below)
+# (optional) two_steps_group_member_attribute_name: (no default)
+# two-step group member attribute name is required for two steps lookup to know which
+# attribute within a group object contained group membership value.
 # two steps group member lookup should only be used for the directory system that
 # does not support memberOf or equivalent virtual attribute. Two steps lookup allows
 # user sync tool pull group membership from group object and does a secondary
-# lookup of user object based on group membership value. When enabled,
-# group_member_filter_format will no longer be used.
-# Depending on the size of your directory, this process might take longer.
-# Set the value to True to enable two-steps lookup.
-#two_steps_group_member_lookup: False
-
-# (optional) two_steps_group_member_attribute_name: (default value given below)
-# two-step group member attribute name is required for two steps lookup to know which
-# attribute within group object contained group membership value.
-# In OpenLDAP, this value can be uniqueMember or member depending on objectClass.
+# lookup of user object based on group membership value.
 # the value of the specified attribute should return a distinguishName of a user.
+# Note: Depending on the size of your directory, this process might take longer.
+#       group_member_filter_format must not be defined when using this option.
 #two_steps_group_member_attribute_name: "member"
 
 # (optional) string_encoding (default value given below)
