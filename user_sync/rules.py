@@ -21,6 +21,8 @@
 
 import logging
 import six
+from itertools import chain
+
 
 import user_sync.connector.umapi
 import user_sync.error
@@ -35,6 +37,7 @@ class RuleProcessor(object):
     # rule processing option defaults
     # these are in alphabetical order!  Always add new ones that way!
     default_options = {
+        'adobe_group_filter': None,
         'after_mapping_hook': None,
         'default_country_code': None,
         'delete_strays': False,
@@ -743,13 +746,20 @@ class RuleProcessor(object):
         if self.will_process_strays:
             self.add_stray(umapi_info.get_name(), None)
 
+        if self.options['adobe_group_filter']:
+            umapi_users = self.get_umapi_user_in_groups(umapi_info, umapi_connector, self.options['adobe_group_filter'])
+        else:
+            umapi_users = umapi_connector.iter_users()
         # Walk all the adobe users, getting their group data, matching them with directory users,
         # and adjusting their attribute and group data accordingly.
-        for umapi_user in umapi_connector.iter_users():
+        for umapi_user in umapi_users:
             # get the basic data about this user; initialize change markers to "no change"
             user_key = self.get_umapi_user_key(umapi_user)
             if not user_key:
                 self.logger.warning("Ignoring umapi user with empty user key: %s", umapi_user)
+                continue
+            if umapi_info.get_umapi_user(user_key):
+                self.logger.debug("Ignoring umapi user. This user has already been processed: %s", umapi_user)
                 continue
             umapi_info.add_umapi_user(user_key, umapi_user)
             attribute_differences = {}
@@ -798,6 +808,13 @@ class RuleProcessor(object):
         # mark the umapi's adobe users as processed and return the remaining ones in the map
         umapi_info.set_umapi_users_loaded()
         return user_to_group_map
+
+    def get_umapi_user_in_groups(self,umapi_info, umapi_connector, groups):
+        umapi_users_iters = []
+        for group in groups:
+            if group.get_umapi_name() == umapi_info.get_name():
+                umapi_users_iters.append(umapi_connector.iter_users(in_group=group.get_group_name()))
+        return chain.from_iterable(umapi_users_iters)
 
     def is_umapi_user_excluded(self, in_primary_org, user_key, current_groups):
         if in_primary_org:
