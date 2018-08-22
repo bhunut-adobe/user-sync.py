@@ -34,10 +34,10 @@ server:
 # [NOTE: the priv_key_path setting can be an absolute or relative pathname;
 # if relative, it is interpreted relative to this configuration file.]
 enterprise:
-  org_id: "Org ID goes here"
   api_key: "API key goes here"
-  client_secret: "Client secret goes here"
   tech_acct: "Tech account ID goes here"
+  org_id: "Org ID goes here"
+  client_secret: "Client secret goes here"
   priv_key_path: "path/to/private/key/file"
 
   # (optional) As an alternative to priv_key_path, you can place the private key 
