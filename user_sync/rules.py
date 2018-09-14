@@ -746,14 +746,14 @@ class RuleProcessor(object):
         if self.will_process_strays:
             self.add_stray(umapi_info.get_name(), None)
 
-        if self.options['adobe_group_filter']:
-            umapi_users = self.get_umapi_user_in_groups(umapi_info, umapi_connector, self.options['adobe_group_filter'])
-        else:
-            umapi_users = umapi_connector.iter_users()
+        umapi_users = umapi_connector.iter_users()
         # Walk all the adobe users, getting their group data, matching them with directory users,
         # and adjusting their attribute and group data accordingly.
         for umapi_user in umapi_users:
             # get the basic data about this user; initialize change markers to "no change"
+            if self.options['adobe_group_filter']:
+                if not self.is_umapi_user_in_filter_group(umapi_info,umapi_user, self.options['adobe_group_filter']):
+                    continue
             user_key = self.get_umapi_user_key(umapi_user)
             if not user_key:
                 self.logger.warning("Ignoring umapi user with empty user key: %s", umapi_user)
@@ -809,12 +809,14 @@ class RuleProcessor(object):
         umapi_info.set_umapi_users_loaded()
         return user_to_group_map
 
-    def get_umapi_user_in_groups(self,umapi_info, umapi_connector, groups):
-        umapi_users_iters = []
-        for group in groups:
-            if group.get_umapi_name() == umapi_info.get_name():
-                umapi_users_iters.append(umapi_connector.iter_users(in_group=group.get_group_name()))
-        return chain.from_iterable(umapi_users_iters)
+    def is_umapi_user_in_filter_group(self,umapi_info, umapi_user, groups):
+        if 'groups' in umapi_user:
+            normalize_umapi_user_groups = [normalize_string(u) for u in umapi_user['groups']]
+            for group in groups:
+                if group.get_umapi_name() == umapi_info.get_name():
+                    if normalize_string(group.get_group_name()) in normalize_umapi_user_groups:
+                        return True
+        return False
 
     def is_umapi_user_excluded(self, in_primary_org, user_key, current_groups):
         if in_primary_org:
