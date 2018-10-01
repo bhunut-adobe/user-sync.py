@@ -14,14 +14,14 @@ nav_order: 320
 ## Setting Up Scheduled Run on Windows
 
 
-#### Without Email Notification:
-Create a ps1 script with the invocation of user-sync. Create the file run_sync.ps1 for this contents:
+### Without Email Notification:
+Create a ps1 script with the invocation of user-sync. Create the file run_sync.ps1 with contents below:
 
 	python .\user-sync.pex --users mapped --process-groups
 
 
-#### With Email Notification:
-Create the following PowerShell file with the invocation of user-sync piped to a scan to pull out relevant log entries for a summary.  Create the file run_sync.ps1 for this contents:
+### With Email Notification:
+Create the following PowerShell file with the invocation of user-sync piped to a scan to pull out relevant log entries for a summary.  Create the file run_sync.ps1 with contents below::
 
 ```powershell
 <#
@@ -69,13 +69,13 @@ if ($err) {
 }
 ```
 
-#### Task Scheduler
-This PowerShell code uses the Windows task scheduler to run the User Sync tool every day starting at 11:00 PM:
+### Task Scheduler
+Using Windows Task Scheduler PowerShell cmdlets below to schedule User Sync Tool to run every day starting at 11:00 PM:
 
-Edit the following and run the commands from PowerShell.
+Edit the following and invoke the commands from PowerShell with elevated privileges.
 
--WorkingDirectory with your User-Sync Directory path
--User with an account that will be running the Task
+-WorkingDirectory with your User-Sync Directory path<br/>
+-User with an account that will be running the Task<br/>
 -Password with an account password
 
 ```powershell
@@ -91,14 +91,14 @@ Note that often when setting up scheduled tasks, commands that work from the com
 
 ## Setting Up Scheduled Run on Unix-Based Systems
 
-#### Without Email Notification:
-Create a shell script with the invocation of user-sync.
+### Without Email Notification:
+Create a shell script with the invocation of user-sync. Create the file run_sync.sh with contents below:
 
 	cd [user-sync-directory-path]
 	./user-sync --users mapped --process-groups
 
-#### With Email Notification:
-Create a shell script with the invocation of user-sync piped to a scan to pull out relevant log entries for a summary.  Create the file run_sync.sh for this with contents like:
+### With Email Notification:
+Create a shell script with the invocation of user-sync piped to a scan to pull out relevant log entries for a summary.  Create the file run_sync.sh with contents below:
 
 	cd [user-sync-directory-path]
 	./user-sync --users mapped --process-groups |  grep "CRITICAL\\|WARNING\\|ERROR\\|=====\\|-----\\|number of\\|Number of" | mail -s “Adobe User Sync Report for `date +%F-%a`”
@@ -106,8 +106,8 @@ Create a shell script with the invocation of user-sync piped to a scan to pull o
 
 You need to fill in your specific User Sync command line options and the email address to which the report should be sent.
 
-#### Cron Job
-This entry in  the Unix crontab will run the User Sync tool at 11 PM each day:
+### Cron Job
+This entry in the Unix crontab will run the User Sync tool at 11 PM each day:
 
 	0 23 * * *  path_to_Sync_shell_command/run_sync.sh
 

@@ -14,27 +14,27 @@ Once you have access to the server where User Sync will run.
 
 There are two methods of installing User Sync Tool.
 
-### Method A (Install Script):
+## Method A (Install Script):
 
 This script will automatically install the required Python, download User Sync Tool, example configuration files and utilities to help with the configuration. This method work for both Windows and Linux.
 
 Run the following command with elevated privileges:
 
 **Windows:**
-
-    (New-Object System.Net.WebClient).DownloadFile("https://git.io/fY19R","${PWD}\inst.ps1"); .\inst.ps1; rm -Force .\inst.ps1;
-
+```powershell
+(New-Object System.Net.WebClient).DownloadFile("https://git.io/fY19R","${PWD}\inst.ps1"); .\inst.ps1; rm -Force .\inst.ps1;
+```
 
 **Linux/MacOS:**
-
-    sudo sh -c 'wget -O ins.sh https://git.io/fY1SD; chmod 777 ins.sh; ./ins.sh; rm ins.sh;'
-
+```shell
+sudo sh -c 'wget -O ins.sh https://git.io/fY1SD; chmod 777 ins.sh; ./ins.sh; rm ins.sh;'
+```
 
 Note: Server will need to have internet access for this script to work.
 
 [For more information on install script](https://github.com/adobe/UST-Install-Scripts)
 
-### Method B (Manual Installation):
+## Method B (Manual Installation):
 
 On Windows, you will need to install Python.  As of this writing, version 3.6.x is recommended.  Windows and Python need to be 64 bit versions.
 
